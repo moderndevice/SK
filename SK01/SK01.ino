@@ -1,3 +1,10 @@
+/* SKxx
+ *  Drives WS2811 LED strands 
+ *  Uses an accelermeter for a sensor
+ *  
+ */
+
+
 #include "FastLED.h"
 
 FASTLED_USING_NAMESPACE
@@ -32,10 +39,16 @@ CRGB leds[NUM_LEDS];
 
 Adafruit_LIS3DH lis = Adafruit_LIS3DH();
 
-#define DEBUG_ACCEL
+// #define DEBUG_ACCEL_RAW
+#define DEBUG_ACCEL_TILT
+//#define DEBUG_ACCEL_CHANGE
+#define DEBUG_COLOR
+
+int32_t accelX, accelY, accelZ, lastX, lastY, lastZ, changeX, changeY, changeZ, angle;  // accel globals
+float  tiltx, tilty, tiltz, angle_S, TiltXY;
+int32_t activeLevel = 0;
 
 #include "sensors.h"
-
 
 void setup() {
   delay(3000); // 3 second delay for recovery
