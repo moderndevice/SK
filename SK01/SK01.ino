@@ -1,8 +1,8 @@
 /* SKxx
- *  Drives WS2811 LED strands 
- *  Uses an accelermeter for a sensor
- *  
- */
+    Drives WS2811 LED strands
+    Uses an accelermeter for a sensor
+
+*/
 
 
 #include "FastLED.h"
@@ -43,10 +43,12 @@ Adafruit_LIS3DH lis = Adafruit_LIS3DH();
 #define DEBUG_ACCEL_TILT
 //#define DEBUG_ACCEL_CHANGE
 #define DEBUG_COLOR
+#define TILT_THRESH 0.1
+#define FALLOFF_FACTOR 0.999;  // must be close to 1 but less than 1 eg 0.999
 
 int32_t accelX, accelY, accelZ, lastX, lastY, lastZ, changeX, changeY, changeZ, angle;  // accel globals
 float  tiltx, tilty, tiltz, angle_S, TiltXY;
-int32_t activeLevel = 0;
+float activeLevel = 0;
 
 #include "sensors.h"
 
@@ -116,13 +118,7 @@ void addGlitter( fract8 chanceOfGlitter)
   }
 }
 
-void confetti()
-{
-  // random colored speckles that blink in and fade smoothly
-  fadeToBlackBy( leds, NUM_LEDS, 10);
-  int pos = random16(NUM_LEDS);
-  leds[pos] += CHSV( gHue + random8(64), 200, 255);
-}
+
 
 void sinelon()
 {
@@ -144,11 +140,20 @@ void bpm()
 }
 
 void juggle() {
+
+	static uint8_t color;
   // eight colored dots, weaving in and out of sync with each other
   fadeToBlackBy( leds, NUM_LEDS, 30);
   byte dothue = 0;
-  for ( int i = 0; i < 6; i++) {
-    leds[beatsin16(i + 30, 0, NUM_LEDS)] |= CHSV(dothue, random(200) + 50, 255);
+  for ( int i = 0; i < ((uint8_t)activeLevel / 32); i++) {
+
+  	if (TiltXY > 0.1){
+  		color = (uint8_t)angle;
+  	}
+  	else{
+  		color = dothue;
+  	}
+    leds[beatsin16(i + (uint8_t)activeLevel, 0, NUM_LEDS)] |= CHSV( color, random(120) + 50, activeLevel);
     dothue += 32;
   }
 }
