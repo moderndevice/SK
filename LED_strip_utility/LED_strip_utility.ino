@@ -88,9 +88,8 @@ uint8_t gHue = 0; // rotating "base color" used by many of the patterns
 
 void loop()
 {
-  readSensors();
-  juggle();
- // juggleOriginal();
+ // readSensors();
+  wipe();
   FastLED.show();
   // insert a delay to keep the framerate modest
   FastLED.delay(2);
@@ -140,15 +139,14 @@ void bpm()
   }
 }
 
-void juggleOriginal() {
-  // eight colored dots, weaving in and out of sync with each other
-  fadeToBlackBy( leds, NUM_LEDS, 20);
-  static byte dothue = 0;
-  for ( int i = 0; i < 8; i++) {
-    // beatsin16 	( 	accum88  	beats_per_minute,
-    // uint16_t  	lowest = 0, uint16_t  	highest = 65535, uint32_t  	timebase = 0, uint16_t phase_offset = 0 )
-    leds[beatsin16(50, 10, NUM_LEDS)] |= CHSV(dothue, 120 + random(200), 255);
-    dothue += 8;
+void wipe()
+{
+	static uint8_t index;
+  // colored stripes pulsing at a defined Beats-Per-Minute (BPM)
+  CRGBPalette16 palette = PartyColors_p;
+  index++;
+  for ( int i = 0; i < NUM_LEDS; i++) { //9948
+    leds[i] = ColorFromPalette(palette, index, 255);
   }
 }
 
@@ -158,18 +156,16 @@ void juggle() {
   // eight colored dots, weaving in and out of sync with each other
   fadeToBlackBy( leds, NUM_LEDS, 30);
   byte dothue = 0;
-  for ( int i = 0; i < ((uint8_t)activeLevel / 16); i++) {
+  for ( int i = 0; i < ((uint8_t)activeLevel / 32); i++) {
 
     if (TiltXY > 0.1) {
-
       color = (uint8_t)angle;
     }
     else {
       color = dothue;
     }
-    //	beatsin16 (accum88 beats_per_minute, uint16_t lowest=0, uint16_t highest=65535, uint32_t timebase=0, uint16_t phase_offset=0)
-    leds[beatsin16(i + (uint8_t)activeLevel, 20, NUM_LEDS)] |= CHSV( color, random(128) + 128, activeLevel);
-    dothue += 16;
+    leds[beatsin16(i + (uint8_t)activeLevel, 0, NUM_LEDS)] |= CHSV( color, random(120) + 50, activeLevel);
+    dothue += 32;
   }
 }
 

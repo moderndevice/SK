@@ -1,7 +1,7 @@
-/* 
- COB_LED code
- Drive COB LEDs using an accelerometer 
- Uses some code derived from Adafruit NeoPixel library
+/*
+  COB_LED code
+  Drive COB LEDs using an accelerometer
+  Uses some code derived from Adafruit NeoPixel library
 */
 
 #include <Wire.h>
@@ -18,13 +18,19 @@ const int bluePin = 10;    // LED connected to digital pin 9
 const int greenPin = 9;    // LED connected to digital pin 9
 const int redPin = 5;      // LED connected to digital pin 9
 
+
+float accelX1, accelY1, accelZ1, lastX1, lastY1, lastZ1;
+float  tiltx1, tilty1, tiltz1, angle1;
+
 int accelX, accelY, accelZ, lastX, lastY, lastZ, changeX, changeY, changeZ;
 float  tiltx, tilty, tiltz, angle;
 
 uint8_t white, red, green, blue;
 
 /******  DEBUGGING / PRINTING ******/
+#define DEBUG_ACCEL_RAW1 // analog accel
 // #define DEBUG_ACCEL_RAW
+#define DEBUG_ACCEL_TILT1
 // #define DEBUG_ACCEL_TILT
 //#define DEBUG_ACCEL_CHANGE
 #define DEBUG_COLOR
@@ -44,7 +50,7 @@ void setup() {
 
   if (! lis.begin(0x18)) {   // change this to 0x19 for alternative i2c address
     Serial.println("Couldnt start");
-    while (1);
+   // while (1);
   }
   Serial.println("LIS3DH found!");
   lis.setRange(LIS3DH_RANGE_4_G);   // 2, 4, 8 or 16 G!
@@ -58,7 +64,9 @@ void loop() {
   uint32_t color;
   int angleT;
 
-  readAccel();
+readAccel1();
+  //readAccel();
+return;
 
   angle2 = (angle + 3.14) * 255.0 / (2 * PI); // map angle to 0-255 for HSV function
 
