@@ -114,5 +114,49 @@ uint32_t fadeToBlack(uint32_t color, float factor) {
   return ((white << 24) + (red << 16) + (green << 8) + blue);
 }
 
+void checkActive() {
+  static uint32_t lastTime;
+  int iter = 1;
+  if (millis() - lastActive > 7000) {
+
+    if (millis() - lastTime > 5000 ) {
+
+      int thePick = random(3);
+
+      if (thePick == 0) {
+        for (int i = 0; i > -1; i = i + iter) {
+          delay(10);
+          setTube1((i << 24));
+          if (i > 254) iter = -1;  // reverse direction
+
+        }
+        lastTime = millis();
+      }
+
+      if (thePick == 1) {
+        for (int i = 0; i > -1; i = i + iter) {
+          delay(10);
+          setTube2((i << 24));
+          if (i > 254) iter = -1;  // reverse direction
+
+        }
+        lastTime = millis();
+      }
+
+      if (thePick == 2) {
+        for (int i = 0; i > -1; i = i + iter) {
+          delay(10);
+          setTube3((i << 24));
+          if (i > 254) iter = -1;  // reverse direction
+
+        }
+        lastTime = millis();
+      }
+
+    }
+
+  }
+}
+
 
 

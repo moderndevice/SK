@@ -81,6 +81,8 @@ void setup() {
     analogWrite(pwmPins[i], 0);
   }
 
+  lastActive = millis();
+
 }
 
 void loop() {
@@ -142,7 +144,7 @@ void loop() {
     color2 = HSV(hue2, sat, value);
     color3 = HSV(hue3, sat, value);
 
-    //    setTube1(color1);
+     // setTube1(color1);
     //    setTube2(color2);
     //    setTube3(color3);
 
@@ -153,6 +155,7 @@ void loop() {
       lastActive = millis();
     }
 
+checkActive();
 
   }
 
