@@ -57,7 +57,17 @@ uint32_t HSV(byte Hue, byte Sat, byte Value ) {
   white = ((255.0 - Sat) * Value) / 512.0;
   return ((uint32_t)white << 24) + ((uint32_t)red << 16) + ((uint32_t)green << 8) + (uint32_t)blue;
   //return strip.Color(Hue * 3.4, 0, 255 - Hue * 3.4,  0);
+}
 
+void setColors( uint8_t red,  uint8_t green,  uint8_t blue ,  uint8_t white) {
+
+  for (int i = 0; i < 3; i++) {
+    analogWrite(greenPins[i], green);
+    analogWrite(redPins[i], red);
+
+    analogWrite(bluePins[i], blue);
+    analogWrite(whitePins[i], white);
+  }
 
 }
 
