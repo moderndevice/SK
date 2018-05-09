@@ -28,10 +28,10 @@ FASTLED_USING_NAMESPACE
 #error "Requires FastLED 3.1 or later; check github for latest code."
 #endif
 
-#define DATA_PIN    5
+#define DATA_PIN    8
 #define LED_TYPE     WS2811
 #define COLOR_ORDER GRB
-#define NUM_LEDS    180
+#define NUM_LEDS    190
 CRGB leds[NUM_LEDS];
 
 #define BRIGHTNESS         255
@@ -90,7 +90,7 @@ void loop()
 {
   readSensors();
   juggle();
- // juggleOriginal();
+  // juggleOriginal();
   FastLED.show();
   // insert a delay to keep the framerate modest
   FastLED.delay(2);
@@ -161,15 +161,18 @@ void juggle() {
   for ( int i = 0; i < ((uint8_t)activeLevel / 16); i++) {
 
     if (TiltXY > 0.1) {
-
       color = (uint8_t)angle;
+      //	beatsin16 (accum88 beats_per_minute, uint16_t lowest=0, uint16_t highest=65535, uint32_t timebase=0, uint16_t phase_offset=0)
+      leds[beatsin16(i + (uint8_t)activeLevel, 20, NUM_LEDS)] |= CHSV( color, random(128) + 128, activeLevel);
+      dothue += 16;
     }
     else {
       color = dothue;
+      //	beatsin16 (accum88 beats_per_minute, uint16_t lowest=0, uint16_t highest=65535, uint32_t timebase=0, uint16_t phase_offset=0)
+      leds[beatsin16(i + (uint8_t)activeLevel, 20, NUM_LEDS)] |= CHSV( color, random(50) + 20, activeLevel);
+      dothue += 16;
     }
-    //	beatsin16 (accum88 beats_per_minute, uint16_t lowest=0, uint16_t highest=65535, uint32_t timebase=0, uint16_t phase_offset=0)
-    leds[beatsin16(i + (uint8_t)activeLevel, 20, NUM_LEDS)] |= CHSV( color, random(128) + 128, activeLevel);
-    dothue += 16;
+
   }
 }
 
